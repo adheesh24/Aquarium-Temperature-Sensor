@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<title>ICT Project</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+		<script>
+			function GetReadings() {
+				var spreadsheetID = "16MJdHtQAgGz1gH5IqaWCCDCne3fU2OSi6u2NycaLXIY";
+				var url = "https://spreadsheets.google.com/feeds/list/" + spreadsheetID + "/od6/public/values?alt=json";
+				$.getJSON(url, function(data) {
+					var entry = data.feed.entry;
+				   $(entry).each(function(){
+				     	$('tbody').append('<tr><td>' + this.gsx$date.$t + '</td><td>' + this.gsx$time.$t + '</td><td>'+ this.gsx$temp.$t + '</td><td>' + this.gsx$fan.$t +'</td></tr>');
+				   });
+				 });
+				var dt = new Date();
+				$('#lastRefreshed').html('<div class="col-sm-6 text-right font-weight-bold">Last Refreshed:</div><div class="col-sm-6 text-left">' + dt.toLocaleString() + '</div>');
+				$('#lastRefreshed').removeClass('invisible');
+			}
+			$(document).load(GetReadings());
+		</script>
+	</head>
+	<body>
+		<main role="main" class="container" style="background-color: lightgray;">
+			<br>
+			<h1 class="text-center">Temperature Sensor Readings using Raspberry Pi</h1>
+			<br>
+			<div class="text-center">
+				<button class="btn btn-success" onclick="GetReadings()">Refresh</button>
+				<div id="lastRefreshed" class="alert alert-secondary row invisible" role="alert"></div>
+			</div>
+			<table class="table" style="background-color: lightgray;">
+				<thead class="thead-dark">
+					<th>Date</th>
+					<th>Time</th>
+					<th>Temperature (&#8451;)</th>
+					<th>Fan Status</th>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</main>
+	</body>
+</html>
+
